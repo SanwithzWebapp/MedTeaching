@@ -1,0 +1,12 @@
+function sendLineMessageToLastUser() {
+  const t = 'YOUR_LINE_CHANNEL_ACCESS_TOKEN';
+  const s = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
+  const uid = s.getRange(s.getLastRow(), 52).getValue();
+  if (!uid) return;
+  UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { Authorization: `Bearer ${t}` },
+    payload: JSON.stringify({ to: uid, messages: [{ type: 'text', text: 'ขอบคุณที่ส่งข้อมูลเข้ามานะครับ เราได้รับเรียบร้อยแล้ว!' }] })
+  });
+}
