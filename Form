@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submission</title>
+<!-- jquery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
+  
+<!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Sweet Alert -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- LIFF SDK -->
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+<!-- Sanwithz Style -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sanwithz/Form/sanwithzstyle2.min.css">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+  
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">ระบบลงทะเบียนใช้งาน</h2>
+        <form id="dataForm" class="list mt-3">
+            <div class="mb-3">
+                <label for="uid" class="form-label disable ">UID</label>
+                <input type="text" class="form-control" id="uid" name="uid" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">ชื่อ - นามสกุล</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="sex" class="form-label">เพศ</label>
+                <select class="form-control" id="sex" name="sex" required>
+                    <option value="">Select</option>
+                    <option value="ชาย">ชาย</option>
+                    <option value="หญิง">หญิง</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="dob" class="form-label">วันเกิด</label>
+                <input type="date" class="form-control" id="dob" name="dob" required>
+            </div>
+            <div class="mb-3">
+                <label for="age" class="form-label">อายุ</label>
+                <input type="number" class="form-control" id="age" name="age" required>
+            </div>
+            <div class="mb-3">
+                <label for="passport" class="form-label">เลขประจำตัวประชาชน/Passport</label>
+                <input type="text" class="form-control" id="passport" name="passport">
+            </div>
+            <div class="mb-3">
+                <label for="telephone" class="form-label">เบอร์โทรศัพท์</label>
+                <input type="text" class="form-control" id="telephone" name="telephone" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        var serverUrl = "xxxxx";
+        var lineID = "xxxxx";
+        $(document).ready(function() {
+            liff.init({ liffId: lineID}).then(() => {
+                if (liff.isLoggedIn()) {
+                    liff.getProfile().then(profile => {
+                        $('#uid').val(profile.userId);
+                    });
+                } else {
+                    liff.login();
+                }
+            }).catch(err => console.error(err));
+            
+            $('#dataForm').ajaxForm({
+                url: serverUrl,
+                type: 'POST',
+                dataType: 'json',
+                beforeSubmit: function() {
+                    Swal.fire({
+                        title: 'Submitting...',
+                        text: 'Please wait while we process your request.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
+                success: function(response) {
+                    if(response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data submitted successfully!',
+                        });
+                        $('#dataForm')[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Submission failed. Try again.',
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred. Please try again.',
+                    });
+                }
+            });
+        });
+    </script>
+  
+  
+  
+    <!-- Footer -->
+    <footer style="font-size: 14px;">
+    © <script>document.write(new Date().getFullYear());</script> Copyright | พัฒนาโดยครูสิทธิชาติ สิทธิ
+    <a href="https://www.facebook.com/SanwithzWebapp" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+    <a href="https://www.youtube.com/@Sanwithz" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+  </footer>
+
+  
+</body>
+</html>
