@@ -68,9 +68,11 @@
 
     <script>
         var serverUrl = "xxxxx";
-        var lineID = "xxxxx";
+      
+       var liffID = "xxxxx" 
+        
         $(document).ready(function() {
-            liff.init({ liffId: lineID}).then(() => {
+            liff.init({ liffId:liffID}).then(() => {
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(profile => {
                         $('#uid').val(profile.userId);
@@ -122,13 +124,6 @@
     </script>
   
   
-  
-    <!-- Footer -->
-    <footer style="font-size: 14px;">
-    © <script>document.write(new Date().getFullYear());</script> Copyright | พัฒนาโดยครูสิทธิชาติ สิทธิ
-    <a href="https://www.facebook.com/SanwithzWebapp" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-    <a href="https://www.youtube.com/@Sanwithz" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-  </footer>
 
   
 </body>
